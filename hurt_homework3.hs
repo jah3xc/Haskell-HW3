@@ -11,16 +11,20 @@ import RPNAST
 prob1 :: String -> PExp
 prob1 x = decipher(words x)
 
-decipher :: String -> PExp
-  | [] = []
-  | x == "+" = Plus:(decipher xs)
-  | x == "-" = Minus:(decipher xs)
-  | x == "*" = Mul:(decipher xs)
-  | x == "/" = IntDiv:(decipher xs)
-  | x        = (Val (read x :: Int)):(decipher xs)
+decipher :: [String] -> PExp
+decipher ("+":xs) = Plus:(decipher xs) 
+decipher ("-":xs) = Minus:(decipher xs)
+decipher ("*":xs) = Mul:(decipher xs)
+decipher ("/":xs) = IntDiv:(decipher xs)
+decipher (x:xs)   = Val(read x :: Int):(decipher xs)
+decipher [] = []
 
 prob2    :: a
 prob2    = undefined
+--prob2 [val 5, val 4, Mul]	Stack 1) Val 5 2) Val 4 3) Val 5 * Val 4 4) [Val 20]
+--prob2 []			
+--Last case should be wild cards and error
+-- look out for subtraction by 0
 
 prob3    :: a
 prob3    = undefined
