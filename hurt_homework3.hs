@@ -4,10 +4,13 @@
 module Homework3 where
 import Test.Hspec
 import RPNAST
-
+import Control.Exception (evaluate)
+import Debug.Trace (trace)
 
 --prob1    :: a
 --prob1    = undefined
+-- We used the ideas we discussed in class to complete probl1.
+-- The problem was entering a  
 prob1 :: String -> PExp
 prob1 x = decipher(words x)
 
@@ -33,3 +36,34 @@ prob4    :: a
 prob4    = undefined
 
 -- Write your Hspec Tests below
+
+
+--Dont use this technique for prob3
+error_example :: IO()
+error_example = hspec $ do
+  describe "Eval" $ do
+    context "For division by 0" $ do
+      it "should return an error" $ do
+        evaluate (eval [Val 1,Val 0,IntDiv]) `shouldThrow` anyException
+
+
+--stack example
+push :: a -> [a] -> [a]
+push x stack = x:stack
+
+pop :: [a] -> (a, [a])
+pop []     = error "Cannot pop an empty stack"
+pop [x]    = (x,[])
+pop (x:xs) = (x,xs)
+
+top :: [a] -> a
+top []     = error "Empty stack"
+top (x:xs) = x
+
+evalRPN ops = go' ops []
+  where go' (Plus:rest) (r:l:vals) = go' rest ((l+r):vals)
+        go' ((Val i):rest) vals    = go' rest(i:vals)
+        go' (Mul:rest) (r:l:vals)  = undefined
+        -- etc etc
+        go' [] [i]                 = i
+        go' _ _                    = undefined
