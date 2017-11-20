@@ -4,40 +4,53 @@
 module Homework3 where
 import Test.Hspec
 import RPNAST
-import Control.Exception (evaluate)
-import Debug.Trace (trace)
+
 
 --prob1    :: a
 --prob1    = undefined
 -- We used the ideas we discussed in class to complete probl1.
 -- The problem was entering a string, removing the white space, pattern matching on the x, adding the associated value to a list and returning the list. In order to get around the white space, we  used the words function and sent the result to the 'decipher' helper function to do the pattern matching.  
 prob1 :: String -> PExp
-prob1 x = decipher(words x)
-
-decipher :: [String] -> PExp
-decipher ("+":xs) = Plus:(decipher xs) 
-decipher ("-":xs) = Minus:(decipher xs)
-decipher ("*":xs) = Mul:(decipher xs)
-decipher ("/":xs) = IntDiv:(decipher xs)
-decipher (x:xs)   = Val(read x :: Int):(decipher xs)
-decipher [] = []
+prob1 x = prob1' (words x)
+	where   prob1' :: [String] -> PExp	--helper function
+		prob1' ("+":xs) = Plus:(prob1' xs) 
+ 		prob1' ("-":xs) = Minus:(prob1' xs)
+		prob1' ("*":xs) = Mul:(prob1' xs)
+		prob1' ("/":xs) = IntDiv:(prob1' xs)
+		prob1' (x:xs)   = Val(read x :: Int):(prob1' xs)
+		prob1' [] 	= []
 
 -- right now I'm using the example from the book to get something working. we also have the notes from the class below.
-prob2 :: a
-prob2 = undefined
-
-
-solveRPN   = head . foldl foldingFunction [] . words
-  where foldingFunction (x:y:ys) "+" = (y + x):ys
-        foldingFunction (x:y:ys) "-" = (y - x):ys
-	foldingFunction (x:y:ys) "*" = (y * x):ys
-        foldingFunction (x:y:ys) "/" = (y / x):ys
-	foldingFunction xs numberString = read numberString:xs
-
+--found this version of a 'stack' on reddit.com/r/haskell. I'm hoping to keep pass the stack as the accum for my folding.
+--solveRPN   = head . foldl foldingFunction [] . words
+--	where foldingFunction (x:y:ys) "+" = (y + x):ys
+--	        foldingFunction (x:y:ys) "-" = (y - x):ys
+--		foldingFunction (x:y:ys) "*" = (y * x):ys
+--	        foldingFunction (x:y:ys) "/" = (y / x):ys
+--		foldingFunction xs numberString = read numberString:xs
 --Last case should be wild cards and error
 -- look out for subtraction by 0
-prob3    :: a
-prob3    = undefined
+
+
+
+
+--proob3    :: a
+--prob3    = undefined
+
+prob3	:: PExp -> RPNResult
+prob3 a	= prob3' a []
+	where   prob3' :: PExp -> [Int] -> RPNResult --helper function
+		prob3' ((Val x):xs) stack		= prob3' xs (x:stack)
+		prob3' (Plus:xs) (r:l:stack)		= prob3' xs ((l + r):stack)
+		prob3' (Minus:xs) (r:l:stack)		= prob3' xs ((l - r):stack)
+		prob3' (Mul:xs) (r:l:stack)		= prob3' xs ((l * r):stack)
+		prob3' (IntDiv:xs) (0:l:stack)		= Failure DivByZero
+		prob3' (IntDiv:xs) (r:l:stack) 		= prob3' xs ((div l r):stack)
+		prob3' [] [x]				= Success x
+		prob3'  _ _				= Failure BadSyntax
+
+
+
 
 prob4    :: a
 prob4    = undefined
