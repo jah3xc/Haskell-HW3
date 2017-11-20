@@ -41,11 +41,11 @@ prob3	:: PExp -> RPNResult
 prob3 a	= prob3' a []
 	where   prob3' :: PExp -> [Int] -> RPNResult --helper function
 		prob3' ((Val x):xs) stack		= prob3' xs (x:stack)
-		prob3' (Plus:xs) (r:l:stack)		= prob3' xs ((l + r):stack)
-		prob3' (Minus:xs) (r:l:stack)		= prob3' xs ((l - r):stack)
-		prob3' (Mul:xs) (r:l:stack)		= prob3' xs ((l * r):stack)
-		prob3' (IntDiv:xs) (0:l:stack)		= Failure DivByZero
-		prob3' (IntDiv:xs) (r:l:stack) 		= prob3' xs ((div l r):stack)
+		prob3' (Plus:xs) (x:y:stack)		= prob3' xs ((y + x):stack)
+		prob3' (Minus:xs) (x:y:stack)		= prob3' xs ((y - x):stack)
+		prob3' (Mul:xs) (x:y:stack)		= prob3' xs ((y * x):stack)
+		prob3' (IntDiv:xs) (0:y:stack)		= Failure DivByZero
+		prob3' (IntDiv:xs) (x:y:stack) 		= prob3' xs ((div y x):stack)
 		prob3' [] [x]				= Success x
 		prob3'  _ _				= Failure BadSyntax
 
