@@ -12,6 +12,7 @@ type RPNResult2    = Result String String
 --prob1    = undefined
 -- We used the ideas we discussed in class to complete probl1.
 -- The problem was entering a string, removing the white space, pattern matching on the x, adding the associated value to a list and returning the list. In order to get around the white space, we  used the words function and sent the result to the 'decipher' helper function to do the pattern matching.
+--David
 prob1 :: String -> PExp
 prob1 x = prob1'(words x)
 	where   prob1' :: [String] -> PExp	--helper function
@@ -22,19 +23,9 @@ prob1 x = prob1'(words x)
 		prob1' (x:xs)   = Val(read x :: Int):(prob1' xs)
 		prob1' [] 	= []
 
---prob2 :: a
---prob2 = undefined
---
--- right now I'm using the example from the book to get something working. we also have the notes from the class below.
---found this version of a 'stack' on reddit.com/r/haskell. I'm hoping to keep pass the stack as the accum for my folding.
---solveRPN   = head . foldl foldingFunction [] . words
---	where foldingFunction (x:y:ys) "+" = (y + x):ys
---	        foldingFunction (x:y:ys) "-" = (y - x):ys
---		foldingFunction (x:y:ys) "*" = (y * x):ys
---	        foldingFunction (x:y:ys) "/" = (y / x):ys
---		foldingFunction xs numberString = read numberString:xs
---Last case should be wild cards and error
--- look out for subtraction by 0
+-- To solve problem 2, we used the RPN example from "Learn You A Haskell for the Greater Good".
+-- The problem involves taking in a list, pattern matchin on each item. If the item is a value, add it to the list. If the item is an operation, foldr the operation over the list.
+--David
 
 prob2 :: PExp -> Int
 prob2 ((Val x):[])	= x --if theres just a single number, return it
@@ -48,7 +39,14 @@ prob2 a = prob2' a []
 		prob2' (IntDiv:xs) (x:y:stack)		= prob2' xs ((div y x):stack)
 		prob2' [] [x]				=  x
 
-
+-- For problem 3 I used an example, I found off reddit.com/r/haskell. The solution for prob2 didn't work for prob3 as the operation was only supposed to work on the last 2 operations in the list
+-- so now when it found an operation, it looked at the last two variables, performed the operation against them, and added that number to the list.
+--	where foldingFunction (x:y:ys) "+" = (y + x):ys
+--	        foldingFunction (x:y:ys) "-" = (y - x):ys
+--		foldingFunction (x:y:ys) "*" = (y * x):ys
+--	        foldingFunction (x:y:ys) "/" = (y / x):ys
+--		foldingFunction xs numberString = read numberString:xs
+--David
 prob3	:: PExp -> RPNResult
 prob3 ((Val x):[])		= Success x --if theres just a single number, return it
 prob3 (x:[])			= Failure (BadSyntax)
@@ -91,7 +89,9 @@ prob4 a = prob4' a [] []
 
 -- Write your Hspec Tests below
 
-
+--For test cases I used the information put out in class and the test cases from prior classes.
+-- Unfortunately, I was unable to find out how to test the exceptions thrown in prob2 in the time allotted.
+--David
 --Dont use this technique for prob3
 --error_example :: IO()
 --error_example = hspec $ do
@@ -107,6 +107,12 @@ test_prob1 = hspec $ do
 			prob1 "200 + - * /" `shouldBe` [Val 200, Plus, Minus, Mul, IntDiv]
 		it "+ - * / 200 should return [Plus, Minus, Mul, IntDiv, Val 200]" $ do
 			prob1 "+ - * / 200" `shouldBe` [Plus, Minus, Mul, IntDiv, Val 200]
+
+test_prob2 ::IO ()
+test_prob2 = hspec $ do
+	describe "prob2 test case" $ do
+		it "[Val 4, Val 2, IntDiv] should return 2" $ do
+			prob2 [Val 4, Val 2, IntDiv] `shouldBe` 2
 
 
 test_prob3 :: IO ()
@@ -129,4 +135,4 @@ test_prob4 = hspec $ do
 		it "[Val 2] should return Success '2'" $ do
 			prob4 [Val 2] `shouldBe` Success "2"
 		it "[Plus] should return Failure 'Bad Input.'" $ do
-			prob4 [Plus] `shouldBe` Failure "Bad Input." 
+			prob4 [Plus] `shouldBe` Failure "Bad Input."
