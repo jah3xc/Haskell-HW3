@@ -71,7 +71,7 @@ prob3 a	= prob3' a []
 
 prob4	:: PExp  -> RPNResult2
 prob4 ((Val x):[]) = Success (show x)
-prob4 (_:[])       = Failure "Bad Input"
+prob4 (_:[])       = Failure "Bad Input."
 prob4 a = prob4' a [] []
 	where
 		prob4' :: PExp -> [Int] -> String -> RPNResult2
@@ -86,7 +86,7 @@ prob4 a = prob4' a [] []
 	        prob4' (IntDiv:xs) (x:stack) stack2    = prob4' xs (drop 1 stack) ("("++stack2++" / "++(show x)++")")
 
   	   	prob4' [] [] stack2         = Success stack2
-     	  	prob4' _ _ _          = Failure "Bad input"
+     	  	prob4' _ _ _          = Failure "Bad Input."
 
 
 -- Write your Hspec Tests below
@@ -125,8 +125,8 @@ test_prob4 = hspec $ do
 		it "[Val 1, Val 1, Plus] should return Success '(1 + 1)'" $ do
 			prob4 [Val 1, Val 1, Plus] `shouldBe` Success "(1 + 1)"
 		it "[Val 2, Val 4, Plus, Val 3, IntDiv] should return Success '((2 + 4) / 3'" $ do
-			prob4 [Val 2, Val 4, Plus, Val 3, IntDiv] `shouldBe` Success "((2 + 4) / 3"
+			prob4 [Val 2, Val 4, Plus, Val 3, IntDiv] `shouldBe` Success "((2 + 4) / 3)"
 		it "[Val 2] should return Success '2'" $ do
 			prob4 [Val 2] `shouldBe` Success "2"
-		it "[Plus] should return Failure 'Bad Input'" $ do
-			prob4 [Plus] `shouldBe` Failure "Bad Input" 
+		it "[Plus] should return Failure 'Bad Input.'" $ do
+			prob4 [Plus] `shouldBe` Failure "Bad Input." 
