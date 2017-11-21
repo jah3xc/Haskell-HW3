@@ -68,6 +68,12 @@ prob3 a	= prob3' a []
 
 
 
+--prob4	:: PExp -> String
+--prob4 ((Val x):[])	= Success x
+
+
+
+
 --prob4	:: PExp  -> RPNResult2
 --prob4 a = prob4' a []
 --	where   prob4' :: PExp -> [Int] -> String -> RPNResult2
