@@ -101,11 +101,25 @@ test_prob1 = hspec $ do
 		it "+ - * / 200 should return [Plus, Minus, Mul, IntDiv, Val 200]" $ do
 			prob1 "+ - * / 200" `shouldBe` [Plus, Minus, Mul, IntDiv, Val 200]
 
---test_prob2 :: IO ()
---test_prob2 = hspec $ do
---	describe "prob2 test cases" $ do
---		it "[Val 4, Val 2, IntDiv] should return 2" $ do
---			prob2 [Val 4, Val 2, IntDiv] `shouldBe` 2
---		context "encounters bad input" $ do
---			it "[Mul] should return ***Exception: Bad Input." $ do
---				evaluate (prob2 [Mul]) `shouldThrow` anyException 
+
+test_prob3 :: IO ()
+test_prob3 = hspec $ do
+	describe "prob3 test case" $ do
+		it "[Val 5, Val 0, IntDiv] should return Failure DivByZero" $ do
+			prob3 [Val 5, Val 0, IntDiv] `shouldBe` Failure DivByZero
+		it "prob3 [IntDiv, Plus, Val 0] should return Failure InvalidInput" $ do
+			prob3 [IntDiv, Plus, Val 0] `shouldBe` Failure BadSyntax
+		it "prob3 [Val 5, Val 1, Val 1, Plus, Mul] should return Success 10" $ do
+			prob3 [Val 5, Val 1, Val 1, Plus, Mul] `shouldBe` Success 10
+
+test_prob4 :: IO ()
+test_prob4 = hspec $ do
+	describe "prob4 test case" $ do
+		it "[Val 1, Val 1, Plus] should return Success '(1 + 1)'" $ do
+			prob4 [Val 1, Val 1, Plus] `shouldBe` Success "(1 + 1)"
+		it "[Val 2, Val 4, Plus, Val 3, IntDiv] should return Success '((2 + 4) / 3'" $ do
+			prob4 [Val 2, Val 4, Plus, Val 3, IntDiv] `shouldBe` Success "((2 + 4) / 3"
+		it "[Val 2] should return Success '2'" $ do
+			prob4 [Val 2] `shouldBe` Success "2"
+		it "[Plus] should return Failure 'Bad Input'" $ do
+			prob4 [Plus] `shouldBe` Failure "Bad Input" 
