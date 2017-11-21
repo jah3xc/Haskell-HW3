@@ -43,7 +43,6 @@ prob2 a = prob2' a []
 		prob2' ((Plus):xs) stack 		= prob2' xs ((foldr (+) 0 stack):[])
 		prob2' ((Minus):xs) stack		= prob2' xs ((foldr (-) 0 stack):[])
 		prob2' ((Mul):xs) stack			= prob2' xs ((foldr (*) 1 stack):[])
---		prob3' (IntDiv:xs) (x:y:stack)		= Failure (DivByZero)
 		prob2' (IntDiv:xs) (x:y:stack)		= prob2' xs ((div y x):stack)
 		prob2' [] [x]				=  x
 
