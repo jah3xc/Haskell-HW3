@@ -48,7 +48,6 @@ prob2 a = prob2' a []
 		prob2' (IntDiv:xs) (x:y:stack)		= prob2' xs ((div y x):stack)
 		prob2' [] [x]				=  x
 
---
 
 prob3	:: PExp -> RPNResult
 prob3 ((Val x):[])		= Success x --if theres just a single number, return it
@@ -59,31 +58,28 @@ prob3 a	= prob3' a []
 		prob3' ((Plus):xs) (x:y:stack) 		= prob3' xs ((x + y):stack)
 		prob3' ((Minus):xs) (x:y:stack)		= prob3' xs ((y - x):stack)
 		prob3' ((Mul):xs) (x:y:stack)		= prob3' xs ((x * y):stack)
-		prob3' ((IntDiv):xs) (x:y:stack)	
+		prob3' ((IntDiv):xs) (x:y:stack)
 			| x == 0 = Failure(DivByZero)
 			| x /= 0 = prob3' xs ((div y x):stack)
 		prob3' [] [x]				= Success x
-		prob3' _ []				= Failure(BadSyntax)
+		prob3' _ []				= Failure (BadSyntax) 
 
 
-
-
---prob4	:: PExp -> String
---prob4 ((Val x):[])	= Success x
 
 
 
 
 --prob4	:: PExp  -> RPNResult2
 --prob4 a = prob4' a []
---	where   prob4' :: PExp -> [Int] -> String -> RPNResult2
+--	where
+--		prob4' :: PExp -> [Int] -> String -> RPNResult2
 --		prob4' ((Val x):xs) stack stack2     = prob4' xs (x:stack)
 --		prob4' (Plus:xs) (x:y:stack) stack2      = prob4' xs (stack2:(show y):" + ":(show x))
 --		prob4' (Minus:xs) (x:y:stack) stack2       = prob4' xs (stack2:(show y):" - "(show x))
 --		prob4' (Mul:xs) (x:y:stack) stack2        = prob4' xs (stack2:(show y):" * ":(show x))
- --       prob4' (IntDiv:xs) (x:y:stack) stack2    = prob4' xs (stack2:(show y):" \ ":(show x))
---        prob4' [] stack stack2         = Success stack2 
---        prob4' _ _          = Failure "Bad input"
+--       	prob4' (IntDiv:xs) (x:y:stack) stack2    = prob4' xs (stack2:(show y):" / ":(show x))
+--      	prob4' [] stack stack2         = Success stack2
+--       		prob4' _ _          = Failure "Bad input"
 
 
 -- Write your Hspec Tests below
