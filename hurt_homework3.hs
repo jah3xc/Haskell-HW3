@@ -54,13 +54,14 @@ prob3 (x:[])			= Failure (BadSyntax)
 prob3 a	= prob3' a []
 	where
 		prob3' ((Val x):xs) stack		= prob3' xs (x:stack)
-		prob3' ((Plus):xs) stack 		= prob3' xs ((foldr (+) 0 stack):[])
-		prob3' ((Minus):xs) stack		= prob3' xs ((foldr (-) 0 stack):[])
-		prob3' ((Mul):xs) stack			= prob3' xs ((foldr (*) 1 stack):[])
---		prob3' (IntDiv:xs) (x:y:stack)		= Failure (DivByZero)
-		prob3' (IntDiv:xs) (x:y:stack)		= prob3' xs ((div y x):stack)
+		prob3' ((Plus):xs) (x:y:stack) 		= prob3' xs ((x + y):stack)
+		prob3' ((Minus):xs) (x:y:stack)		= prob3' xs ((y - x):stack)
+		prob3' ((Mul):xs) (x:y:stack)		= prob3' xs ((x * y):stack)
+		prob3' ((IntDiv):xs) (x:y:stack)	
+			| x == 0 = Failure(DivByZero)
+			| x /= 0 = prob3' xs ((div y x):stack)
 		prob3' [] [x]				= Success x
-		prob3' [] []				= errorWithoutStackTrace "Exception: Bad Input."
+		prob3' _ []				= Failure(BadSyntax))
 
 -- Write your Hspec Tests below
 
