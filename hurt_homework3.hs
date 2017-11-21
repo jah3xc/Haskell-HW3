@@ -77,7 +77,7 @@ prob4 a = prob4' a [] []
 		prob4' (Plus:xs) (x:y:stack) stack2      = prob4' xs stack (stack2++(show y)++" + "++(show x))
 		prob4' (Minus:xs) (x:y:stack) stack2       = prob4' xs stack (stack2++(show y)++" - "++(show x))
 		--prob4' (Mul:xs) (x:y:stack) stack2        = prob4' xs stack (stack2++(show y)++" * "++(show x))
-	        prob4' (IntDiv:xs) (x:y:stack) stack2    = prob4' xs stack (stack2:(show y):" / ":(show x))
+	        prob4' (IntDiv:xs) (x:y:stack) stack2    = prob4' xs stack (stack2++(show y)++" / "++(show x))
   	   	prob4' [] stack stack2         = Success stack2
      	  	prob4' _ _ _          = Failure "Bad input"
 
