@@ -91,4 +91,21 @@ prob4 a = prob4' a [] []
 --  describe "Eval" $ do
 --    context "For division by 0" $ do
 --      it "should return an error" $ do
---        evaluate (eval [Val 1,Val 0,IntDiv]) `shouldThrow` anyException
+--        evaluate (eval [Val 1,Val 0,IntDiv]) `shouldThrow` anyExceptio
+--
+test_prob1 :: IO ()
+test_prob1 = hspec $ do
+	describe "prob1 test case" $ do
+		it "200 + - * / should return [Val 200, Plus, Minus, Mul, IntDiv]" $ do
+			prob1 "200 + - * /" `shouldBe` [Val 200, Plus, Minus, Mul, IntDiv]
+		it "+ - * / 200 should return [Plus, Minus, Mul, IntDiv, Val 200]" $ do
+			prob1 "+ - * / 200" `shouldBe` [Plus, Minus, Mul, IntDiv, Val 200]
+
+--test_prob2 :: IO ()
+--test_prob2 = hspec $ do
+--	describe "prob2 test cases" $ do
+--		it "[Val 4, Val 2, IntDiv] should return 2" $ do
+--			prob2 [Val 4, Val 2, IntDiv] `shouldBe` 2
+--		context "encounters bad input" $ do
+--			it "[Mul] should return ***Exception: Bad Input." $ do
+--				evaluate (prob2 [Mul]) `shouldThrow` anyException 
