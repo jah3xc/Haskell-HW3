@@ -66,22 +66,30 @@ prob3 a	= prob3' a []
 
 
 
-
+--prob4 checks for some initial cases at first and returns appropriate values
+--then goes to prob4'
+--recursively goes through list and pushes variables onto a stack and then pulls them off and uses them when an operand is called
+--when operand is called and items are pulled off they are added to a list called stack2, with the appropriate paretheses added
+--when all items in list are processed it returns Success and the finished string
+--on failure at any point it returns bad input
 prob4	:: PExp  -> RPNResult2
 prob4 ((Val x):[]) = Success (show x)
 prob4 (_:[])       = Failure "Bad Input."
+prob4 ([])         = Failure "Bad Input."
 prob4 a = prob4' a [] []
 	where
 		prob4' :: PExp -> [Int] -> String -> RPNResult2
-		prob4' ((Val x):xs) stack stack2     = prob4' xs (x:stack) stack2
+		prob4' ((Val x):xs) stack stack2 
+		    |(length stack) == 2 = Failure "Bad Input."
+		    | (length stack) < 2 = prob4' xs (x:stack) stack2
 		prob4' (Plus:xs) (x:y:stack) stack2      = prob4' xs (drop 2 stack) (stack2++"("++(show y)++" + "++(show x)++")")
 		prob4' (Plus:xs) (x:stack) stack2        = prob4' xs (drop 1 stack) ("("++stack2++" + "++(show x)++")")
 		prob4' (Minus:xs) (x:y:stack) stack2       = prob4' xs (drop 2 stack) (stack2++"("++(show y)++" - "++(show x)++")")
 		prob4' (Minus:xs) (x:stack) stack2       = prob4' xs (drop 1 stack) ("("++stack2++" - "++(show x)++")")
 		prob4' (Mul:xs) (x:y:stack) stack2        = prob4' xs (drop 2 stack) (stack2++"("++(show y)++" * "++(show x)++")")
 		prob4' (Mul:xs) (x:stack) stack2        = prob4' xs (drop 1 stack) ("("++stack2++" * "++(show x)++")")
-	        prob4' (IntDiv:xs) (x:y:stack) stack2    = prob4' xs (drop 2 stack) (stack2++"("++(show y)++" / "++(show x)++")")
-	        prob4' (IntDiv:xs) (x:stack) stack2    = prob4' xs (drop 1 stack) ("("++stack2++" / "++(show x)++")")
+	        prob4' (IntDiv:xs) (x:y:stack) stack2    = prob4' xs (drop 2 stack) (stack2++"("++(show y)++" / "++(show x)++")") --won't compile if these two lines are not spaced inwards
+	        prob4' (IntDiv:xs) (x:stack) stack2    = prob4' xs (drop 1 stack) ("("++stack2++" / "++(show x)++")") --ditto
 
   	   	prob4' [] [] stack2         = Success stack2
      	  	prob4' _ _ _          = Failure "Bad Input."
