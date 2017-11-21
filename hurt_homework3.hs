@@ -69,7 +69,7 @@ prob3 a	= prob3' a []
 
 
 prob4	:: PExp  -> RPNResult2
-prob4 a = prob4' a []
+prob4 a = prob4' a [] []
 	where 
 	    --prob4' :: PExp -> [Int] -> String -> RPNResult2
 		prob4' ((Val x):xs) stack stack2     = prob4' xs (x:stack) stack2
