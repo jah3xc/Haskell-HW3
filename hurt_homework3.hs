@@ -5,7 +5,7 @@ module Homework3 where
 import Test.Hspec
 import RPNAST
 
-type RPNResult2    = Result String1 String2
+type RPNResult2    = Result String String
 
 
 --prob1    :: a
