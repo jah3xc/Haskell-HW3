@@ -70,15 +70,22 @@ prob3 a	= prob3' a []
 
 
 prob4	:: PExp  -> RPNResult2
+prob4 ((Val x):[]) = Success (show x)
+prob4 (_:[])       = Failure "Bad Input"
 prob4 a = prob4' a [] []
 	where
-	--	prob4' :: PExp -> [Int] -> String -> RPNResult2
+		prob4' :: PExp -> [Int] -> String -> RPNResult2
 		prob4' ((Val x):xs) stack stack2     = prob4' xs (x:stack) stack2
-		prob4' (Plus:xs) (x:y:stack) stack2      = prob4' xs stack (stack2++(show y)++" + "++(show x))
-		prob4' (Minus:xs) (x:y:stack) stack2       = prob4' xs stack (stack2++(show y)++" - "++(show x))
-		prob4' (Mul:xs) (x:y:stack) stack2        = prob4' xs stack (stack2++(show y)++" * "++(show x))
-	        prob4' (IntDiv:xs) (x:y:stack) stack2    = prob4' xs stack (stack2++(show y)++" / "++(show x))
-  	   	prob4' [] stack stack2         = Success stack2
+		prob4' (Plus:xs) (x:y:stack) stack2      = prob4' xs (drop 2 stack) (stack2++"("++(show y)++" + "++(show x)++")")
+		prob4' (Plus:xs) (x:stack) stack2        = prob4' xs (drop 1 stack) ("("++stack2++" + "++(show x)++")")
+		prob4' (Minus:xs) (x:y:stack) stack2       = prob4' xs (drop 2 stack) (stack2++"("++(show y)++" - "++(show x)++")")
+		prob4' (Minus:xs) (x:stack) stack2       = prob4' xs (drop 1 stack) ("("++stack2++" - "++(show x)++")")
+		prob4' (Mul:xs) (x:y:stack) stack2        = prob4' xs (drop 2 stack) (stack2++"("++(show y)++" * "++(show x)++")")
+		prob4' (Mul:xs) (x:stack) stack2        = prob4' xs (drop 1 stack) ("("++stack2++" * "++(show x)++")")
+	        prob4' (IntDiv:xs) (x:y:stack) stack2    = prob4' xs (drop 2 stack) (stack2++"("++(show y)++" / "++(show x)++")")
+	        prob4' (IntDiv:xs) (x:stack) stack2    = prob4' xs (drop 1 stack) ("("++stack2++" / "++(show x)++")")
+
+  	   	prob4' [] [] stack2         = Success stack2
      	  	prob4' _ _ _          = Failure "Bad input"
 
 
